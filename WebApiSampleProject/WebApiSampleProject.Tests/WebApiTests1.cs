@@ -6,6 +6,7 @@ using WebApiSampleProject.Controllers;
 using WebApiSampleProject.Models;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net;
 
 namespace WebApiSampleProject.Tests
 {
@@ -20,6 +21,10 @@ namespace WebApiSampleProject.Tests
         public void SetupTestObjects()
         {
             Controller = new EmployeeController();
+            Controller.Request = new HttpRequestMessage()
+            {
+                Properties = { { System.Web.Http.Hosting.HttpPropertyKeys.HttpConfigurationKey, new System.Web.Http.HttpConfiguration() } }
+            };
         }
 
         [TearDown]
@@ -38,23 +43,22 @@ namespace WebApiSampleProject.Tests
         public void GetEmployeeById_ShouldReturnSpecificId()
         {
             var testEmployee = Controller.GetEmployeeDetails(2);
-            Assert.That(testEmployee.EmployeeId == 2);
+            Assert.That(testEmployee.StatusCode == HttpStatusCode.OK);
         }
 
         [Test]
         public void GetEmployeeByName_ShouldReturnSpecificName()
         {
-            Employee testEmployee = Controller.GetEmployeeByName("manish");
-            Assert.That(testEmployee.EmployeeName.ToLower(), Contains.Substring("manish"));
+            HttpResponseMessage testEmployee = Controller.GetEmployeeByName("manish");
+            Assert.That(testEmployee.StatusCode == HttpStatusCode.OK);
         }
         
         
         [Test]
-        [Ignore("how to throw exception")]
         public void GetNoEmployeeById_ShouldThrowException()
         {
             var test = Controller.GetEmployeeDetails(100);
-            Assert.Fail();
+            Assert.That(HttpStatusCode.NotFound == test.StatusCode);
         }
     }
 }

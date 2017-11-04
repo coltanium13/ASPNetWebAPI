@@ -55,15 +55,17 @@ namespace WebApiSampleProject.Controllers
         
         [Route("{id:int}")]
         [HttpGet]
-        public Employee GetEmployeeDetails(int id)
+        public HttpResponseMessage GetEmployeeDetails(int id)
         {
             //Return a single employee detail  
             var employee = employees.FirstOrDefault(e => e.EmployeeId == id);
             if (employee == null)
             {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                var message = ($"Employee with id = {id} not found");
+                HttpError err = new HttpError(message);
+                return Request.CreateResponse(HttpStatusCode.NotFound, err);
             }
-            return employee;
+            return Request.CreateResponse(HttpStatusCode.OK, employee);
         }
 
         /// <summary>
@@ -74,12 +76,16 @@ namespace WebApiSampleProject.Controllers
         /// 
         [Route("{name}")]
         [HttpGet]
-        public Employee GetEmployeeByName(string name)
+        public HttpResponseMessage GetEmployeeByName(string name)
         {
             var employee = employees.FirstOrDefault(e => e.EmployeeName.ToLower().Contains(name.ToLower()));
-            if(employee == null)
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
-            return employee;
+            if (employee == null)
+            {
+                var message = ($"Employee with name = {name} not found");
+                HttpError err = new HttpError(message);
+                return Request.CreateResponse(HttpStatusCode.NotFound, err);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, employee); ;
         }
     }
 }
