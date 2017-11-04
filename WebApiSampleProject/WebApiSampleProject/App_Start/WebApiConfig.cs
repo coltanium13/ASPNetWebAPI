@@ -22,11 +22,11 @@ namespace WebApiSampleProject
             );
 
             //Specific employee by name
-            config.Routes.MapHttpRoute(
-                name: "EmployeeByName",
-                routeTemplate: "api/{controller}/{action}/{name}",
-                defaults: new { name = RouteParameter.Optional }
-            );
+            //config.Routes.MapHttpRoute(
+            //    name: "EmployeeByName",
+            //    routeTemplate: "api/{controller}/{action}/{name}",
+            //    defaults: new { name = RouteParameter.Optional }
+            //);
         }
     }
 }

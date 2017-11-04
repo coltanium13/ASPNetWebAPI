@@ -8,6 +8,7 @@ using WebApiSampleProject.Models;
 
 namespace WebApiSampleProject.Controllers
 {
+    [RoutePrefix("api/employee")]
     public class EmployeeController : ApiController
     {
         IList<Employee> employees = new List<Employee>()
@@ -38,6 +39,8 @@ namespace WebApiSampleProject.Controllers
         /// Gets all employees
         /// </summary>
         /// <returns></returns>
+        /// 
+        [HttpGet]
         public IList<Employee> GetAllEmployees()
         {
             //Return list of all employees  
@@ -49,6 +52,9 @@ namespace WebApiSampleProject.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        
+        [Route("{id:int}")]
+        [HttpGet]
         public Employee GetEmployeeDetails(int id)
         {
             //Return a single employee detail  
@@ -65,6 +71,9 @@ namespace WebApiSampleProject.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
+        /// 
+        [Route("{name}")]
+        [HttpGet]
         public Employee GetEmployeeByName(string name)
         {
             var employee = employees.FirstOrDefault(e => e.EmployeeName.ToLower().Contains(name.ToLower()));
