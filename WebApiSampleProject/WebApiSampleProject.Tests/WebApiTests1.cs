@@ -7,6 +7,8 @@ using WebApiSampleProject.Models;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace WebApiSampleProject.Tests
 {
@@ -30,7 +32,6 @@ namespace WebApiSampleProject.Tests
         [TearDown]
         public void TearDownTests()
         {
-
         }
 
         [Test]
@@ -46,19 +47,36 @@ namespace WebApiSampleProject.Tests
             Assert.That(testEmployee.StatusCode == HttpStatusCode.OK);
         }
 
+        //[Test]
+        //public void GetEmployeeByName_ShouldReturnSpecificName()
+        //{
+        //    HttpResponseMessage testEmployee = Controller.GetEmployeeByName("manish");
+        //    Assert.That(testEmployee.StatusCode == HttpStatusCode.OK);
+        //}
+
         [Test]
         public void GetEmployeeByName_ShouldReturnSpecificName()
         {
-            HttpResponseMessage testEmployee = Controller.GetEmployeeByName("manish");
-            Assert.That(testEmployee.StatusCode == HttpStatusCode.OK);
+            IHttpActionResult actionResult = Controller.GetEmployeeByName("manish");
+            var contentResult = actionResult as OkNegotiatedContentResult<Employee>;
+            
+            //Assert.IsInstanceOf<OkResult>(actionResult);
+            Assert.That(contentResult.Content.EmployeeName.ToLower().Contains("manish"));
         }
-        
-        
+
+
         [Test]
         public void GetNoEmployeeById_ShouldThrowException()
         {
             var test = Controller.GetEmployeeDetails(100);
             Assert.That(HttpStatusCode.NotFound == test.StatusCode);
+        }
+
+        [Test]
+        public void GetNoEmployeeByName_ShouldThrowException()
+        {
+            var test = Controller.GetEmployeeByName("aaa");
+            Assert.IsInstanceOf<NotFoundResult>(test);
         }
     }
 }

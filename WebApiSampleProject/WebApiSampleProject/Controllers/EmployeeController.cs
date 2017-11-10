@@ -73,19 +73,20 @@ namespace WebApiSampleProject.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        /// 
+
         [Route("{name}")]
         [HttpGet]
-        public HttpResponseMessage GetEmployeeByName(string name)
+        public IHttpActionResult GetEmployeeByName(string name)
         {
             var employee = employees.FirstOrDefault(e => e.EmployeeName.ToLower().Contains(name.ToLower()));
             if (employee == null)
             {
                 var message = ($"Employee with name = {name} not found");
                 HttpError err = new HttpError(message);
-                return Request.CreateResponse(HttpStatusCode.NotFound, err);
+                //return Content(HttpStatusCode.NotFound, message);
+                return NotFound();
             }
-            return Request.CreateResponse(HttpStatusCode.OK, employee); ;
+            return Ok<Employee>(employee);
         }
     }
 }
